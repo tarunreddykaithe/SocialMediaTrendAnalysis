@@ -25,7 +25,7 @@ class StdOutListener(StreamListener):
     print(status)
 
 if __name__ == '__main__':
-  kafka_client = KafkaClient("192.168.36.130:9092")  
+  kafka_client = KafkaClient("192.168.36.130:6667")  
   producer = SimpleProducer(kafka_client)
   l = StdOutListener()
   auth = OAuthHandler(consumer_key, consumer_secret)
