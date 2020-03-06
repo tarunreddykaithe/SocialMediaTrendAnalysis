@@ -1,1 +1,3 @@
 bin/spark-submit — packages org.apache.spark:spark-streaming-kafka-0–8_2.11:2.0.0 KafkaSparkStreaming.py 192.168.36.130:6667 test1
+
+PYSPARK_PYTHON=python3 spark-submit --master yarn --deploy-mode client --conf "spark.dynamicAllocation.enabled=false" --jars /SPARK_HOME/lib/spark-examples.jar KafkaSparkStreaming.py 192.168.36.130:6667 test1
