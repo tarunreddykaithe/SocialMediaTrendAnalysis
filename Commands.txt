@@ -1,0 +1,1 @@
+bin/spark-submit — packages org.apache.spark:spark-streaming-kafka-0–8_2.11:2.0.0 KafkaSparkStreaming.py 192.168.36.130:6667 test1
