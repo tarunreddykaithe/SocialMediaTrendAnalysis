@@ -31,5 +31,6 @@ if __name__ == '__main__':
   auth = OAuthHandler(consumer_key, consumer_secret)
   auth.set_access_token(access_token, access_token_secret)
   stream = Stream(auth, l)
-  stream.filter(track=['#twitter'],languages=["en"])
+  stream.filter(locations=[-124.64,32.44,-114.5,41.96],#track=['#twitter'],
+  languages=["en"])
 
