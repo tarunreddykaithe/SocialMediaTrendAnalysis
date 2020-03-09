@@ -10,8 +10,8 @@ if __name__ == '__main__':
         print("Usage: kafka_wordcount.py <zk> <topic>", file=sys.stderr)
         exit(-1)
 
-    sc = SparkContext(appName="PythonStreamingKafkaWordCount")
-    ssc = StreamingContext(sc, 1)
+    sc = SparkContext(appName="KafkaWordCount")
+    ssc = StreamingContext(sc, 20)
 
     zkQuorum, topic = sys.argv[1:]
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1})

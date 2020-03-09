@@ -17,7 +17,7 @@ access_token_secret = "AKtVclTXEJlsZNUWUq2ePjrxfjnAKf1lk88ud6inwHOn8"
 class StdOutListener(StreamListener):
 
   def on_data(self, data):
-    producer.send_messages('test1', data.encode("utf-8"))
+    producer.send_messages('sample5', data.encode("utf-8"))
     print(data)
     return True
 
@@ -25,7 +25,7 @@ class StdOutListener(StreamListener):
     print(status)
 
 if __name__ == '__main__':
-  kafka_client = KafkaClient("192.168.36.130:6667")  
+  kafka_client = KafkaClient("sandbox-hdp.hortonworks.com:6667")  
   producer = SimpleProducer(kafka_client)
   l = StdOutListener()
   auth = OAuthHandler(consumer_key, consumer_secret)
