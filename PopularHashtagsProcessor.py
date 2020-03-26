@@ -31,12 +31,14 @@ def process_rdd(time, rdd):
         tags_counts_df = sql_context_instance.createDataFrame(row_rdd)
         tags_counts_df.registerTempTable("tag_with_counts")
         selected_tags_counts_df = sql_context_instance.sql("select tag, counts from tag_with_counts order by counts desc limit 8")
+        for x in selected_tags_counts_df.collect():
+            print(x)
         selected_tags_counts_df.show()
         #stream_dataframe_to_flask(selected_tags_counts_df)
     except:
         e = sys.exc_info()[0]
         print("Error: %s" % e)
-		
+    
  
 
 
@@ -46,11 +48,11 @@ if __name__ == '__main__':
         exit(-1)
 
     sc = SparkContext(appName="PopularHashTags")
-    ssc = StreamingContext(sc, 20)
+    ssc = StreamingContext(sc, 30)
     ssc.checkpoint("PopularHashTags-Checkpoint")
 
-    zkQuorum, topic = sys.argv[1:]
-    twitterKafkkaStream = KafkaUtils.createStream(ssc, zkQuorum, "Popular-Hashtags", {topic: 1}, {"auto.offset.reset": "largest"})
+    #zkQuorum, topic = sys.argv[1:]
+    twitterKafkkaStream = KafkaUtils.createStream(ssc, "sandbox-hdp.hortonworks.com:2181", "Popular-Hashtags", {"PopularHashtags": 1}, {"auto.offset.reset": "largest"})
     words = twitterKafkkaStream.flatMap(lambda line: line.split(" "))
     hashtags = words.filter(lambda w: '#' in w).map(lambda x: (x, 1))
     # hashtags = words.filter(lambda w: '@' in w).map(lambda x: (x, 1)) # process email count in tweets
