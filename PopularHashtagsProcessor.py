@@ -5,39 +5,56 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext, Row
 import json,requests
 
-def sumup_tags_counts(new_values, total_sum):
-    return (total_sum or 0) + sum(new_values)
-
-	 
-def return_sql_context_instance(spark_context):
-    if ('sqlContextSingletonInstance' not in globals()):
-        globals()['sqlContextSingletonInstance'] = SQLContext(spark_context)
-    return globals()['sqlContextSingletonInstance']
-
-	 
-def stream_dataframe_to_flask(df):
-    top_tags = [str(t.tag) for t in df.select("tag").collect()]
-    tags_count = [p.counts for p in df.select("counts").collect()]
-    url = 'http://sandbox-hdp.hortonworks.com:5050/updateData'
-    request_data = {'words': str(top_tags), 'counts': str(tags_count)}
-    response = requests.post(url, data=request_data)
-
-def process_rdd(time, rdd):
-    print("------------- %s --------------" % str(time))
+def get_people_with_hashtags(tweet):
+    """
+    Returns (people, hashtags) if successful, otherwise returns empty tuple. All users
+    except author have an @ sign appended to the front.
+    """
+    data = json.loads(tweet)
     try:
-		# Use sql table to sort hashtags by count
-        sql_context_instance = return_sql_context_instance(rdd.context)
-        row_rdd = rdd.map(lambda w: Row(tag=w[0], counts=w[1]))
-        tags_counts_df = sql_context_instance.createDataFrame(row_rdd)
-        tags_counts_df.registerTempTable("tag_with_counts")
-        selected_tags_counts_df = sql_context_instance.sql("select tag, counts from tag_with_counts order by counts desc limit 8")
-        for x in selected_tags_counts_df.collect():
-            print(x)
-        selected_tags_counts_df.show()
-        #stream_dataframe_to_flask(selected_tags_counts_df)
-    except:
-        e = sys.exc_info()[0]
-        print("Error: %s" % e)
+        hashtags = ["#" + hashtag["text"] for hashtag in data['entities']['hashtags']]
+        # Tweets without hashtags are a waste of time
+        if len(hashtags) == 0:
+            return ()
+        author = data['user']['screen_name']
+        mentions = ["@" + user["screen_name"] for user in data['entities']['user_mentions']]
+        people = mentions + [author]
+        return (people, hashtags)
+    except KeyError:
+        return ()
+
+def filter_out_unicode(x):
+    """
+    Pass in a list of (authors, hashtags) and return a list of hashtags that are not unicode
+    """
+    hashtags = []
+    for hashtag in x[1]:
+        try:
+            hashtags.append(str(hashtag))
+        except UnicodeEncodeError:
+            pass
+    return (x[0], hashtags)
+
+def flatten(x):
+    """
+    Input:
+    ([people],[hashtags]).
+    Output:
+    [(hashtag, (main_author_flag, {person})),
+     ...]
+    """
+    all_combinations = []
+
+    people = x[0]
+    hashtags = x[1]
+
+    for person in people:
+        for hashtag in hashtags:
+            main_author_flag = 0 if "@" in person else 1
+            all_combinations.append((hashtag, (main_author_flag, {person})))
+    
+    return all_combinations 
+
     
  
 
@@ -53,11 +70,23 @@ if __name__ == '__main__':
 
     #zkQuorum, topic = sys.argv[1:]
     twitterKafkkaStream = KafkaUtils.createStream(ssc, "sandbox-hdp.hortonworks.com:2181", "Popular-Hashtags", {"PopularHashtags": 1}, {"auto.offset.reset": "largest"})
-    words = twitterKafkkaStream.flatMap(lambda line: line.split(" "))
-    hashtags = words.filter(lambda w: '#' in w).map(lambda x: (x, 1))
-    # hashtags = words.filter(lambda w: '@' in w).map(lambda x: (x, 1)) # process email count in tweets
-    tags_totals = hashtags.updateStateByKey(sumup_tags_counts)  # Update checkpoint file with newest <key = hashtag, value = count> pairs
-    tags_totals.foreachRDD(process_rdd)
+        # Returns ([people], [hashtags])
+    lines = twitterKafkkaStream.map(lambda x: get_people_with_hashtags(x[1])).filter(lambda x: len(x)>0)
+
+    # Filters out unicode hashtags
+    hashtags = lines.map(filter_out_unicode)
+
+    # Make all possible combinations --> (hashtag, (main_author, {person})), where main_author == 1
+    # if it is the tweet author
+    flat_hashtags = hashtags.flatMap(flatten)
+
+    # Reduce by hashtag key into a list of authors and a count of tweets.
+    hash_tag_authors_and_counts = flat_hashtags.reduceByKey(lambda a, b: (a[0] + b[0], a[1] | b[1]))
+
+    # Only keep hashtags with more than a certain number of values
+    top_hashtags = hash_tag_authors_and_counts.filter(lambda x: x[1][0] >= 10)
+
+    top_hashtags.pprint()
     
     ssc.start()
     ssc.awaitTermination()
