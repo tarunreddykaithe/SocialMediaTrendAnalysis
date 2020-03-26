@@ -14,11 +14,12 @@ class StdOutListener(StreamListener):
 
   def on_data(self, data):
     producer.send_messages('PopularHashtags', data.encode("utf-8"))
-    #print(data)
+    print(data)
     return True
 
   def on_error(self, status):
     print(status)
+    return True
 
 if __name__ == '__main__':
   kafka_client = KafkaClient("sandbox-hdp.hortonworks.com:6667")  
