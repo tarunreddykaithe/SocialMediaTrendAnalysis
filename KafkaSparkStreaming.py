@@ -22,6 +22,7 @@ def send2solr(solr,rdd):
     solr.add(index, commit=True)
     solr.commit()
     print("Success")
+    return index
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
@@ -34,7 +35,7 @@ if __name__ == '__main__':
     zkQuorum, topic = sys.argv[1:]
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "Twitter-streaming", {topic: 1})
     solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata',timeout=20)
-    lines = kvs.map(lambda x: send2solr(solr,x[1]))
+    kvs.foreachRDD(lambda x: send2solr(solr,x[1]))
 
     #Sample word count program to check tweets are read from kafka
     #counts = lines.flatMap(lambda line: line.split(" ")) \
