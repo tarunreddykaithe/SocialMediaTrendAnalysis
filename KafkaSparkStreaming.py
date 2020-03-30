@@ -7,12 +7,6 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext
 import pysolr
 
-   "created_at":"Tue Mar 24 02:41:26 +0000 2020",
-   "id_str":"1242280332558094336",
-   "text":"SOOOOO PROUD OF YOU ",
-   "user_name":"tarun",
-   "lan":-118.668404,
-   "lng":33.704538
 
 def send2solr(solr,rdd):
     tweet=json.loads(rdd)
