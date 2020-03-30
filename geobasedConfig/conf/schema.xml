@@ -131,7 +131,7 @@
    -->   
    <field name="id_str" type="string" indexed="true" stored="true" required="true" multiValued="false" />
    <field name="user_name" type="string" indexed="true" stored="true" required="true" multiValued="false" /> 
-   <field name="created_at" type="pdate" indexed="true" stored="true" required="true" multiValued="false" /> 
+   <field name="created_at" type="string" indexed="true" stored="true" required="true" multiValued="false" /> 
     
 
    <field name="text" type="string" indexed="false" stored="true" required="true" multiValued="false" />
