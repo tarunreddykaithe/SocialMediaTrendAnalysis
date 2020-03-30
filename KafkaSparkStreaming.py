@@ -16,12 +16,20 @@ if __name__ == '__main__':
     zkQuorum, topic = sys.argv[1:]
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "Twitter-streaming", {topic: 1})
     lines = kvs.map(lambda x: x[1])
+    print("normal line")
     lines.pprint()
+    print("json")
+    jsons=lines.map(lambda x:json.load(x))
+    jsons..pprint()
+    print(jsons["id_str"])
+    print(jsons.id_str)
+
+
     #Sample word count program to check tweets are read from kafka
-    counts = lines.flatMap(lambda line: line.split(" ")) \
-                  .map(lambda word: (word, 1)) \
-                  .reduceByKey(lambda a, b: a+b)
-    counts.pprint()
+    #counts = lines.flatMap(lambda line: line.split(" ")) \
+     #             .map(lambda word: (word, 1)) \
+      #            .reduceByKey(lambda a, b: a+b)
+    #counts.pprint()
 
     ssc.start()
     ssc.awaitTermination()
