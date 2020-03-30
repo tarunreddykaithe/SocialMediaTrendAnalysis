@@ -22,7 +22,8 @@ if __name__ == '__main__':
     print("json")
     jsons=lines.map(lambda x:json.load(x))
     jsons.pprint()
-    print(jsons["id_str"])
+    print("id_str")
+    jsons.map(lambda x: x["id_str"]).foreach(print)
     print(jsons.id_str)
 
 
