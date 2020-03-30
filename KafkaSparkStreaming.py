@@ -8,8 +8,8 @@ from pyspark.sql.context import SQLContext
 import pysolr
 
 
-def send2solr(solr,rdd):
-    tweet=json.loads(rdd)
+def send2solr(data):
+    tweet=json.loads(data)
 
     index = [{
         "created_at": tweet["created_at"],
@@ -19,9 +19,9 @@ def send2solr(solr,rdd):
         "lan":-118.668404,
         "lng":33.704538
     }]
-    solr.add(index, commit=True)
-    solr.commit()
-    print("Success")
+    #solr.add(index, commit=True)
+    #solr.commit()
+    print(index)
     return index
 
 if __name__ == '__main__':
@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
     zkQuorum, topic = sys.argv[1:]
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "Twitter-streaming", {topic: 1})
-    solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata',timeout=20)
-    lines = kvs.map(lambda x: send2solr(solr,x[1])).count()
+    #solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata')
+    lines = kvs.map(lambda x: send2solr(x[1])).count()
 
     #Sample word count program to check tweets are read from kafka
     #counts = lines.flatMap(lambda line: line.split(" ")) \
