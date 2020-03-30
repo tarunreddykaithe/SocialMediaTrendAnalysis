@@ -1,3 +1,4 @@
+import json
 import sys
 from pyspark import SparkContext
 from pyspark import SparkConf
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     lines.pprint()
     print("json")
     jsons=lines.map(lambda x:json.load(x))
-    jsons..pprint()
+    jsons.pprint()
     print(jsons["id_str"])
     print(jsons.id_str)
 
