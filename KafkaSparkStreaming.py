@@ -36,6 +36,8 @@ if __name__ == '__main__':
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "Twitter-streaming", {topic: 1})
     #solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata')
     lines = kvs.map(lambda x: send2solr(x[1])).count()
+    lines.pprint()
+    
 
     #Sample word count program to check tweets are read from kafka
     #counts = lines.flatMap(lambda line: line.split(" ")) \
