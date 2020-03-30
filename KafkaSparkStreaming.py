@@ -20,14 +20,10 @@ if __name__ == '__main__':
     print("normal line")
     lines.pprint()
     print("json")
-    jsons=json.load(lines)
+    jsons = lines.map(lambda x: json.load(x))
     print("id_str")
+    jsons.pprint()
     #jsons.map(lambda x: x["id_str"]).foreach(print)
-    try:
-        print(jsons.id_str)
-        print(jsons["id_str"])
-    except:
-        print(jsons["id_str"])
 
 
     #Sample word count program to check tweets are read from kafka
