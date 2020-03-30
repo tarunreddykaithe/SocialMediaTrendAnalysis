@@ -10,17 +10,17 @@ import pysolr
 
 def send2solr(data):
     tweet=json.loads(data)
-
+    solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata')
     index = [{
         "created_at": tweet["created_at"],
         "id": tweet["id_str"],
         "text": tweet["text"],
-        "user_name": tweet["screen_name"],
+        "user_name": tweet["user"]["screen_name"],
         "lan":-118.668404,
         "lng":33.704538
     }]
-    #solr.add(index, commit=True)
-    #solr.commit()
+    solr.add(index, commit=True)
+    solr.commit()
     print(index)
     return index
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     #solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata')
     lines = kvs.map(lambda x: send2solr(x[1])).count()
     lines.pprint()
-    
+
 
     #Sample word count program to check tweets are read from kafka
     #counts = lines.flatMap(lambda line: line.split(" ")) \
