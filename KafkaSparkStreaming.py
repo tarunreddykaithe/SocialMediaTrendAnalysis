@@ -5,6 +5,29 @@ from pyspark import SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext
+import pysolr
+
+   "created_at":"Tue Mar 24 02:41:26 +0000 2020",
+   "id_str":"1242280332558094336",
+   "text":"SOOOOO PROUD OF YOU ",
+   "user_name":"tarun",
+   "lan":-118.668404,
+   "lng":33.704538
+
+def send2solr(solr,rdd):
+    tweet=json.loads(rdd)
+
+    index = [{
+        "created_at": tweet["created_at"],
+        "id": tweet["id_str"],
+        "text": tweet["text"],
+        "user_name": tweet["screen_name"],
+        "lan":-118.668404,
+        "lng":33.704538
+    }]
+    solr.add(index, commit=True)
+    solr.commit()
+    print("Success")
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
@@ -16,15 +39,8 @@ if __name__ == '__main__':
 
     zkQuorum, topic = sys.argv[1:]
     kvs = KafkaUtils.createStream(ssc, zkQuorum, "Twitter-streaming", {topic: 1})
-    lines = kvs.map(lambda x: x[1])
-    print("normal line")
-    lines.pprint()
-    print("json")
-    jsons = lines.map(lambda x: json.load(x))
-    print("id_str")
-    jsons.pprint()
-    #jsons.map(lambda x: x["id_str"]).foreach(print)
-
+    solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata',timeout=20)
+    lines = kvs.map(lambda x: send2solr(solr,x[1]))
 
     #Sample word count program to check tweets are read from kafka
     #counts = lines.flatMap(lambda line: line.split(" ")) \
