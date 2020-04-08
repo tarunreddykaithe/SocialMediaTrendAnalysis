@@ -1,5 +1,7 @@
 App ID:17357733
 
+tweepy
+kafka-python
 
 API key: p9Z4umwON3CCgAKnNXYpZ2zKv
 API secret key: PT26HyZos0fIrDS0O4LpJL9GQ43DS4IMPHun9gxhW7mBYxkJFD

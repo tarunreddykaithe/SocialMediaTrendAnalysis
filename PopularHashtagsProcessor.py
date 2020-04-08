@@ -72,22 +72,19 @@ if __name__ == '__main__':
     twitterKafkkaStream = KafkaUtils.createStream(ssc, "sandbox-hdp.hortonworks.com:2181", "Popular-Hashtags", {"PopularHashtags": 1})
         # Returns ([people], [hashtags])
     lines = twitterKafkkaStream.map(lambda x: get_people_with_hashtags(x[1])).filter(lambda x: len(x)>0)
-    lines.pprint()
     # Filters out unicode hashtags
     hashtags = lines.map(filter_out_unicode)
-    hashtags.pprint()
+ 
     # Make all possible combinations --> (hashtag, (main_author, {person})), where main_author == 1
     # if it is the tweet author
     flat_hashtags = hashtags.flatMap(flatten)
-    flat_hashtags.pprint()
-
+ 
     # Reduce by hashtag key into a list of authors and a count of tweets.
     hash_tag_authors_and_counts = flat_hashtags.reduceByKey(lambda a, b: (a[0] + b[0], a[1] | b[1]))
-    hash_tag_authors_and_counts.pprint(0)
     # Only keep hashtags with more than a certain number of values
     top_hashtags = hash_tag_authors_and_counts.filter(lambda x: x[1][0] >= 10)
 
     top_hashtags.pprint()
-    
+    print("---------------------------------------end------------------------------------")
     ssc.start()
     ssc.awaitTermination()

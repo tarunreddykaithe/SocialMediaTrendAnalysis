@@ -13,10 +13,10 @@ def send2solr(data):
     solr = pysolr.Solr('http://192.168.36.130:8886/solr/geoTwitterdata')
     index = [{
         "created_at": tweet["created_at"],
-        "id": tweet["id_str"],
+        "id_str": tweet["id_str"],
         "text": tweet["text"],
         "user_name": tweet["user"]["screen_name"],
-        "lan":-118.668404,
+        "lat":-118.668404,
         "lng":33.704538
     }]
     solr.add(index, commit=True)
