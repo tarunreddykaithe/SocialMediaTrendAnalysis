@@ -1,8 +1,0 @@
-work on geo lat n la=ng
-
-what other fields are required
-
-hashtag problem
-
-reporting
-superset ste name to sqlachemy-solr
