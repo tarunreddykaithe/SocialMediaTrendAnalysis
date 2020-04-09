@@ -1,37 +1,66 @@
+import json
 import sys
 from pyspark import SparkContext
 from pyspark import SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext
-import json
+import pysolr
+
+
+def send2solr(data):
+    tweet=json.loads(data)
+    if(tweet["coordinates"]!=None):
+        lat=tweet["coordinates"]["coordinates"][1]
+        lng=tweet["coordinates"]["coordinates"][0]
+    elif(tweet["geo"]!=None):
+        lat=tweet["geo"]["coordinates"][0]
+        lng=tweet["geo"]["coordinates"][1]
+    elif(tweet["place"]!=None):
+        lng=(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2 
+        lat=(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2 
+    else:
+        lat,lng=None
+    
+    if(tweet["place"]!=None):
+        city=tweet["place"]["full_name"]
+        country_code=tweet["place"]["country_code"]
+        #country=tweet["place"]["country"]
+    else:
+        city,country_code=None
+        #country=None
+
+    index = [{
+        "created_at": tweet["created_at"],
+        "id_str": tweet["id_str"],
+        "text": tweet["text"],
+        "user_name": tweet["user"]["screen_name"],
+        "lat":lat,
+        "lng":lng,
+        "city":city,
+        "country_code":country_code#,
+        #"country":country
+
+    }]
+    solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')
+    solr.add(index, commit=True)
+    solr.commit()
+    print(index)
+    return index
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Usage: PopularHashtags.py <zk> <topic>", file=sys.stderr)
+        print("Usage: GeoBasedProcessor.py <zk> <topic>", file=sys.stderr)
         exit(-1)
 
-    sc = SparkContext(appName="PopularHashTags")
+    sc = SparkContext(appName="GeoTweets")
     ssc = StreamingContext(sc, 20)
-    ssc.checkpoint("PopularHashTags-Checkpoint")
+    ssc.checkpoint("GeoTweets-Checkpoint")
 
     zkQuorum, topic = sys.argv[1:]
-    twitterKafkkaStream = KafkaUtils.createStream(ssc, zkQuorum, "Popular-Hashtags", {topic: 1}, {"auto.offset.reset": "largest"})
-    data = twitterKafkkaStream.map(lambda x : x[1])
-    tweets= json.loads([data])
-
-    map(lambda json_object: (json_object["id"]["created_at"], json_object["text"]))
-    lines = kvs.map(lambda x: x[1])
-
-    #iterate through json 
-    #loggin 
-    #n debug
-    lines.pprint()
-    #Sample word count program to check tweets are read from kafka
-    counts = lines.flatMap(lambda line: line.split(" ")) \
-                  .map(lambda word: (word, 1)) \
-                  .reduceByKey(lambda a, b: a+b)
-    counts.pprint()
+    twitterStream = KafkaUtils.createStream(ssc, zkQuorum, "GeoTweets", {topic: 1}, {"auto.offset.reset": "largest"})
+    docs = twitterStream.map(lambda x: send2solr(x[1])).count()
+    docs.pprint()
 
     ssc.start()
     ssc.awaitTermination()

@@ -44,4 +44,6 @@ bin/kafka-console-consumer.sh --bootstrap-server sandbox-hdp.hortonworks.com:218
 
 
 
+spark dm, em set to 256m
+try 2 spark applications at same time
 

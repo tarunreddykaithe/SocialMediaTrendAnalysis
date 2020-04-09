@@ -38,12 +38,5 @@ if __name__ == '__main__':
     lines = kvs.map(lambda x: send2solr(x[1])).count()
     lines.pprint()
 
-
-    #Sample word count program to check tweets are read from kafka
-    #counts = lines.flatMap(lambda line: line.split(" ")) \
-     #             .map(lambda word: (word, 1)) \
-      #            .reduceByKey(lambda a, b: a+b)
-    #counts.pprint()
-
     ssc.start()
     ssc.awaitTermination()
