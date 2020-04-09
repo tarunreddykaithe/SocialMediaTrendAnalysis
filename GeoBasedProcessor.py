@@ -12,7 +12,7 @@ class BlankDict(dict):
     return ''
 
 def send2solr(data):
-    tweet=json.loads(data,object_hook=BlankDict))
+    tweet=json.loads(data,object_hook=BlankDict)
     if(tweet["coordinates"]!=None):
         lat=tweet["coordinates"]["coordinates"][1]
         lng=tweet["coordinates"]["coordinates"][0]
