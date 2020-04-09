@@ -129,7 +129,7 @@
      in a compatible way. Any analysis applied to the <uniqueKey> should _not_ produce multiple
      tokens
    -->   
-   <field name="id" type="string" indexed="false" stored="true" required="true" multiValued="false" />
+   <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
    <field name="user_name" type="string" indexed="false" stored="true" required="true" multiValued="false" /> 
    <field name="created_at" type="string" indexed="false" stored="true" required="true" multiValued="false" /> 
    <field name="text" type="string" indexed="false" stored="true" required="true" multiValued="false" />

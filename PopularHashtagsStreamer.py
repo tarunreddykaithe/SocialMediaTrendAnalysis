@@ -4,7 +4,9 @@ from tweepy import Stream
 
 from kafka import KafkaClient
 from kafka import SimpleProducer
-import json,configparser
+
+import json
+import configparser
 
 class TrendingHashtagsListener(StreamListener):
 
@@ -24,7 +26,7 @@ if __name__ == '__main__':
   config.read('config.ini')
   kafka_client = KafkaClient("sandbox-hdp.hortonworks.com:6667")  
   producer = SimpleProducer(kafka_client)
-  l = StdOutListener()
+  l = TrendingHashtagsListener()
   auth = OAuthHandler(config['TwitterAPI']['key'], config['TwitterAPI']['secret'])
   auth.set_access_token(config['TwitterAPI']['token'], config['TwitterAPI']['token_secret'])
   stream = Stream(auth, l)
