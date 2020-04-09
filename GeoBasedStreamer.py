@@ -10,7 +10,7 @@ class GeoTweetListener(StreamListener):
 
   def on_data(self, data):
     tweet=json.loads(data)
-    if(tweet["place"]!=None || tweet["geo"]!=None || tweet["coordinates"]!=None ):
+    if(tweet["place"]!=None or tweet["geo"]!=None or tweet["coordinates"]!=None ):
       producer.send_messages('GeoBasedTweets', data.encode("utf-8"))
     return True
 
