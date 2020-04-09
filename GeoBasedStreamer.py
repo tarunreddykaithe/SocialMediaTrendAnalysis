@@ -36,4 +36,4 @@ if __name__ == '__main__':
   auth = OAuthHandler(config['TwitterAPI']['key'], config['TwitterAPI']['secret'])
   auth.set_access_token(config['TwitterAPI']['token'], config['TwitterAPI']['token_secret'])
   stream = Stream(auth, l)
-  stream.filter(track=['#corona','#coronavirus','#covid','#StayAtHome','#stayhome', '#CoronaLockdown', '#covid19','#covid2019'],filter_level=None)
+  stream.filter(track=['#corona','#coronavirus','#covid','#StayAtHome','#stayhome', '#CoronaLockdown', '#covid19','#covid2019'],filter_level=None,languages=["en"])
