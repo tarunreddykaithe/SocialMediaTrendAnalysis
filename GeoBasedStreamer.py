@@ -6,10 +6,14 @@ from kafka import KafkaClient
 from kafka import SimpleProducer
 import json,configparser
 
+class BlankDict(dict):
+  def __missing__(self, key):
+    return ''
+
 class GeoTweetListener(StreamListener):
 
   def on_data(self, data):
-    tweet=json.loads(data)
+    tweet=json.loads(data,object_hook=BlankDict)
     if(tweet["place"]!=None or tweet["geo"]!=None or tweet["coordinates"]!=None ):
       producer.send_messages('GeoBasedTweets', data.encode("utf-8"))
     return True
@@ -24,7 +28,7 @@ if __name__ == '__main__':
   kafka_client = KafkaClient("sandbox-hdp.hortonworks.com:6667")  
   producer = SimpleProducer(kafka_client)
   l = GeoTweetListener()
-  auth = OAuthHandler(str(config['TwitterAPI']['key']), str(config['TwitterAPI']['secret']))
-  auth.set_access_token(str(config['TwitterAPI']['token']), str(config['TwitterAPI']['token_secret']))
+  auth = OAuthHandler(config['TwitterAPI']['key'], config['TwitterAPI']['secret'])
+  auth.set_access_token(config['TwitterAPI']['token'], config['TwitterAPI']['token_secret'])
   stream = Stream(auth, l)
-  stream.filter(track=['#corona','#coronavirus','#covid','#stayhome', '#CoronaLockdown', '#covid19','#covid2019'],locations=[176.6229246568,-71.1165113448,-146.8145324279,84.3931531877], languages=["en"])
+  stream.filter(track=['#corona','#coronavirus','#covid','#StayAtHome','#stayhome', '#CoronaLockdown', '#covid19','#covid2019'],filter_level=None)
