@@ -51,7 +51,7 @@ def send2solr(data):
         solr.commit()
         #print(index)
         return index
-    except Exception as e
+    except Exception as e:
         pass
         print(e)
         return tweet
