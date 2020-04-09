@@ -19,7 +19,7 @@ class GeoTweetListener(StreamListener):
         producer.send_messages('GeoBasedTweets', data.encode("utf-8"))
         print("data pushed to kafka")
     except KeyError as msg:
-      #print(tweet)
+      print(msg)
 
     return True
 

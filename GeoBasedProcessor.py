@@ -50,10 +50,11 @@ def send2solr(data):
         solr.add(index, commit=True)
         solr.commit()
         #print(index)
-        
-    except:
-        #continue
-    return index
+        return index
+    except Exception as e
+        pass
+        print(e)
+        return tweet
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
