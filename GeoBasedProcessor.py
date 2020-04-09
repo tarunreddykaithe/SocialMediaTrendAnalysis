@@ -7,27 +7,30 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext
 import pysolr
 
+class BlankDict(dict):
+  def __missing__(self, key):
+    return ''
 
 def send2solr(data):
-    tweet=json.loads(data)
-    if(tweet["coordinates"]!=None):
+    tweet=json.loads(data,object_hook=BlankDict))
+    if(tweet["coordinates"]!=''):
         lat=tweet["coordinates"]["coordinates"][1]
         lng=tweet["coordinates"]["coordinates"][0]
-    elif(tweet["geo"]!=None):
+    elif(tweet["geo"]!=''):
         lat=tweet["geo"]["coordinates"][0]
         lng=tweet["geo"]["coordinates"][1]
-    elif(tweet["place"]!=None):
+    elif(tweet["place"]!=''):
         lng=(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2 
         lat=(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2 
     else:
-        lat,lng=None
+        lat,lng=''
     
-    if(tweet["place"]!=None):
+    if(tweet["place"]!=''):
         city=tweet["place"]["full_name"]
         country_code=tweet["place"]["country_code"]
         #country=tweet["place"]["country"]
     else:
-        city,country_code=None
+        city,country_code=''
         #country=None
 
     index = [{
