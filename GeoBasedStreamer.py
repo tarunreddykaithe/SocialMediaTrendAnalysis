@@ -14,7 +14,7 @@ class GeoTweetListener(StreamListener):
 
   def on_data(self, data):
     tweet=json.loads(data,object_hook=BlankDict)
-    if(tweet["place"]!='' or tweet["geo"]!='' or tweet["coordinates"]!='' ):
+    if(tweet["place"]!=None or tweet["geo"]!=None or tweet["coordinates"]!=None ):
       producer.send_messages('GeoBasedTweets', data.encode("utf-8"))
       print("data pushed to kafka")
     return True
