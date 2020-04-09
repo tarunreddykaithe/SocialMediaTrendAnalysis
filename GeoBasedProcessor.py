@@ -33,24 +33,26 @@ def send2solr(data):
         else:
             city,country_code=None
             #country=None
-    except()
 
-    index = [{
-        "created_at": tweet["created_at"],
-        "id": tweet["id_str"],
-        "text": tweet["text"],
-        "user_name": tweet["user"]["screen_name"],
-        "latitude":lat,
-        "longitude":lng,
-        "city":city,
-        "country_code":country_code#,
-        #"country":country
+        index = [{
+            "created_at": tweet["created_at"],
+            "id": tweet["id_str"],
+            "text": tweet["text"],
+            "user_name": tweet["user"]["screen_name"],
+            "latitude":lat,
+            "longitude":lng,
+            "city":city,
+            "country_code":country_code#,
+            #"country":country
 
-    }]
-    solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')
-    solr.add(index, commit=True)
-    solr.commit()
-    #print(index)
+        }]
+        solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')
+        solr.add(index, commit=True)
+        solr.commit()
+        #print(index)
+        
+    except:
+        #continue
     return index
 
 if __name__ == '__main__':
