@@ -32,11 +32,11 @@ def send2solr(data):
 
     index = [{
         "created_at": tweet["created_at"],
-        "id_str": tweet["id_str"],
+        "id": tweet["id_str"],
         "text": tweet["text"],
         "user_name": tweet["user"]["screen_name"],
-        "lat":lat,
-        "lng":lng,
+        "latitude":lat,
+        "longitude":lng,
         "city":city,
         "country_code":country_code#,
         #"country":country
@@ -45,7 +45,7 @@ def send2solr(data):
     solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')
     solr.add(index, commit=True)
     solr.commit()
-    print(index)
+    #print(index)
     return index
 
 if __name__ == '__main__':
