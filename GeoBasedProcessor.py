@@ -14,36 +14,16 @@ class BlankDict(dict):
 def send2solr(data):
     tweet=json.loads(data)
     try:
-        if tweet["coordinates"]:
-            lat=tweet["coordinates"]["coordinates"][1]
-            lng=tweet["coordinates"]["coordinates"][0]
-        elif tweet["geo"]:
-            lat=tweet["geo"]["coordinates"][0]
-            lng=tweet["geo"]["coordinates"][1]
-        elif tweet["place"]:
-            lng=(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2 
-            lat=(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2 
-        else:
-            lat,lng=None
-    
-        if tweet["place"]:
-            city=tweet["place"]["full_name"]
-            country_code=tweet["place"]["country_code"]
-            #country=tweet["place"]["country"]
-        else:
-            city,country_code=None
-            #country=None
-
         index = [{
             "created_at": tweet["created_at"],
             "id": tweet["id_str"],
             "text": tweet["text"],
             "user_name": tweet["user"]["screen_name"],
-            "latitude":lat,
-            "longitude":lng,
-            "city":city,
-            "country_code":country_code#,
-            #"country":country
+            "longitude":(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2, 
+            "latitude":(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2,
+            "city":tweet["place"]["full_name"],
+            "country_code":tweet["place"]["country_code"],
+            "country":tweet["place"]["country"]
 
         }]
         solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')

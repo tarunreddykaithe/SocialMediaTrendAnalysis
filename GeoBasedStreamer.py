@@ -6,17 +6,14 @@ from kafka import KafkaClient
 from kafka import SimpleProducer
 import json,configparser
 
-class BlankDict(dict):
-  def __missing__(self, key):
-    return ''
 
 class GeoTweetListener(StreamListener):
 
   def on_data(self, data):
     tweet=json.loads(data)
     try:
-      if tweet["place"] or tweet["geo"] or tweet["coordinates"]:
-        producer.send_messages('GeoBasedTweets', data.encode("utf-8"))
+      if tweet["place"]:
+        producer.send_messages('geoTweets', data.encode("utf-8"))
         print("data pushed to kafka")
     except KeyError as msg:
       print(msg)
