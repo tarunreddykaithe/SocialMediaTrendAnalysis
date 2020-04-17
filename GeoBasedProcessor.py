@@ -6,6 +6,7 @@ from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import SQLContext
 import pysolr
+from datetime import datetime
 
 class BlankDict(dict):
   def __missing__(self, key):
@@ -15,7 +16,7 @@ def send2solr(data):
     tweet=json.loads(data)
     try:
         index = [{
-            "created_at": tweet["created_at"],
+            "created_at": datetime.strptime(tweet["created_at"], "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ"),
             "id": tweet["id_str"],
             "text": tweet["text"],
             "user_name": tweet["user"]["screen_name"],
@@ -41,12 +42,12 @@ if __name__ == '__main__':
         print("Usage: GeoBasedProcessor.py <zk> <topic>", file=sys.stderr)
         exit(-1)
 
-    sc = SparkContext(appName="GeoTweets")
+    sc = SparkContext(appName="GeoBasedTweets")
     ssc = StreamingContext(sc, 20)
-    ssc.checkpoint("GeoTweets-Checkpoint")
+    ssc.checkpoint("GeoBasedTweets-Checkpoint")
 
     zkQuorum, topic = sys.argv[1:]
-    twitterStream = KafkaUtils.createStream(ssc, zkQuorum, "GeoTweets", {topic: 1}, {"auto.offset.reset": "largest"})
+    twitterStream = KafkaUtils.createStream(ssc, zkQuorum, "GeoBasedTweets", {topic: 1}, {"auto.offset.reset": "largest"})
     docs = twitterStream.map(lambda x: send2solr(x[1])).count()
     docs.pprint()
 
