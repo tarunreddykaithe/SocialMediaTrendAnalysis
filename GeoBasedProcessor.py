@@ -27,7 +27,7 @@ def send2solr(data):
             "country":tweet["place"]["country"]
 
         }]
-        solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoTweets')
+        solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoBasedTweets')
         solr.add(index, commit=True)
         solr.commit()
         #print(index)
