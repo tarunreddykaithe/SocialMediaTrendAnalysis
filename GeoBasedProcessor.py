@@ -15,8 +15,9 @@ class BlankDict(dict):
 def send2solr(data):
     tweet=json.loads(data)
     try:
+        created_at=str(datetime.strptime(tweet["created_at"], "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ"))
         index = [{
-            "created_at": str(datetime.strptime(tweet["created_at"], "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ")),
+            "created_at": created_at,
             "id": tweet["id_str"],
             "text": tweet["text"],
             "user_name": tweet["user"]["screen_name"],
