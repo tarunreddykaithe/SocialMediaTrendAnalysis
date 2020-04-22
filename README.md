@@ -1,9 +1,9 @@
 # Real Time Twitter Analysis using Spark Streaming, Kafka
+## Introduction
 
+## Architecture
 
-##Architecture
-
-##Build, Deploy
+## Build, Deploy
 
 
 

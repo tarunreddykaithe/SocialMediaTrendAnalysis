@@ -12,9 +12,8 @@ class GeoTweetListener(StreamListener):
   def on_data(self, data):
     tweet=json.loads(data)
     try:
-      if tweet["place"]:
-        producer.send_messages('geoBasedTweets', data.encode("utf-8"))
-        print("data pushed to kafka")
+      producer.send_messages('geoBasedTweets', data.encode("utf-8"))
+      print("data pushed to kafka")
     except KeyError as msg:
       print(msg)
 

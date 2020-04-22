@@ -39,8 +39,8 @@
           "to": "NOW%2B1DAY",
           "field": "created_at",
           "type": "time",
-          "fromDateObj": "2020-03-21T21:24:58.063Z",
-          "toDateObj": "2020-04-20T21:24:58.063Z",
+          "fromDateObj": "2020-03-23T09:40:47.425Z",
+          "toDateObj": "2020-04-22T09:40:47.425Z",
           "mandate": "must",
           "active": true,
           "alias": "",
@@ -91,7 +91,7 @@
           "title": "Time Window"
         },
         {
-          "span": 3,
+          "span": 2,
           "editable": true,
           "type": "hits",
           "loadingEditor": false,
@@ -105,7 +105,7 @@
             "custom": ""
           },
           "style": {
-            "font-size": "28pt",
+            "font-size": "18pt",
             "flex-direction": "row"
           },
           "arrangement": "horizontal",
@@ -123,7 +123,7 @@
               "field": "id",
               "decimalDigits": 0,
               "label": "Total Tweets",
-              "value": "13465"
+              "value": "24171"
             }
           ],
           "refresh": {
@@ -132,7 +132,7 @@
           }
         },
         {
-          "span": 4,
+          "span": 2,
           "editable": true,
           "type": "ticker",
           "loadingEditor": false,
@@ -141,16 +141,49 @@
             "ids": [
               0
             ],
-            "query": "q=*%3A*&wt=json&rows=0&facet=true&facet.range=created_at&facet.range.start=2020-03-21T21:24:58.063Z&facet.range.end=2020-04-20T21:24:58.063Z&facet.range.gap=%2B31DAY&facet.range.hardend=true&facet.range.other=between\n\nq=*%3A*&wt=json&rows=0&facet=true&facet.range=created_at&facet.range.start=2020-03-21T21:19:58.063Z&facet.range.end=2020-04-20T21:19:58.063Z&facet.range.gap=%2B31DAY&facet.range.hardend=true&facet.range.other=between\n-----------\n"
+            "query": "q=*%3A*&wt=json&rows=0&facet=true&facet.range=created_at&facet.range.start=2020-03-23T09:40:47.425Z&facet.range.end=2020-04-22T09:40:47.425Z&facet.range.gap=%2B31DAY&facet.range.hardend=true&facet.range.other=between\n\nq=*%3A*&wt=json&rows=0&facet=true&facet.range=created_at&facet.range.start=2020-03-23T09:35:47.425Z&facet.range.end=2020-04-22T09:35:47.425Z&facet.range.gap=%2B31DAY&facet.range.hardend=true&facet.range.other=between\n-----------\n"
           },
           "style": {
-            "font-size": "36pt"
+            "font-size": "24pt"
           },
           "ago": "5m",
           "arrangement": "vertical",
           "spyable": true,
           "show_queries": true,
           "title": "ticker"
+        },
+        {
+          "span": 3,
+          "editable": true,
+          "type": "facet",
+          "loadingEditor": false,
+          "status": "Stable",
+          "queries": {
+            "mode": "all",
+            "ids": [
+              0
+            ],
+            "query": "q=*%3A*&fq=created_at:[NOW-30DAY%20TO%20NOW%2B1DAY]&facet=true&facet.field=country&wt=json",
+            "basic_query": "q=*%3A*&fq=created_at:[NOW-30DAY%20TO%20NOW%2B1DAY]&facet=true&facet.field=country",
+            "custom": ""
+          },
+          "group": "default",
+          "style": {
+            "font-size": "9pt"
+          },
+          "overflow": "min-height",
+          "fields": [
+            "country"
+          ],
+          "spyable": true,
+          "facet_limit": 10,
+          "maxnum_facets": 5,
+          "foundResults": true,
+          "header_title": "Country Filter",
+          "toggle_element": null,
+          "show_queries": true,
+          "exportSize": null,
+          "offset": 0
         }
       ]
     },
