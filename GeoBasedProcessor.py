@@ -12,7 +12,7 @@ class BlankDict(dict):
   def __missing__(self, key):
     return ''
 
-  def send2solr(data):
+def send2solr(data):
     tweet=json.loads(data)
     try:
         created_at=str(datetime.strptime(str(tweet["created_at"].decode('utf-8')), "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ"))
