@@ -12,7 +12,7 @@ class BlankDict(dict):
   def __missing__(self, key):
     return ''
 
-def send2solr(data):
+  def send2solr(data):
     tweet=json.loads(data)
     try:
         created_at=str(datetime.strptime(str(tweet["created_at"].decode('utf-8')), "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ"))
@@ -31,10 +31,8 @@ def send2solr(data):
         solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoBasedTweets')
         solr.add(index, commit=True)
         solr.commit()
-        #print(index)
         return index
     except Exception as e:
-        pass
         print(e)
         return tweet
 
