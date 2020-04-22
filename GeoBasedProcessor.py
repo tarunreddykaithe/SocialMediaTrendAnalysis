@@ -16,28 +16,16 @@ def send2solr(data):
     tweet=json.loads(data)
     try:
         created_at=str(datetime.strptime(str(tweet["created_at"].decode('utf-8')), "%a %b %d %H:%M:%S %z %Y").strftime("%Y-%m-%dT%H:%M:%SZ"))
-        if tweet["place"]:
-            longitude=(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2
-            latitude=(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2
-            city=tweet["place"]["full_name"]
-            country_code=tweet["place"]["country_code"]
-            country=tweet["place"]["country"]
-        else:
-            longitude=64.676622
-            latitude=-73.922469
-            city="NA"
-            country_code="ZZ"
-            country="NA"
         index = [{
             "created_at": created_at,
             "id": tweet["id_str"],
             "text": tweet["text"],
             "user_name": tweet["user"]["screen_name"],
-            "longitude":longitude,
-            "latitude":latitude,
-            "city":city,
-            "country_code":country_code,
-            "country":country
+            "longitude":(tweet["place"]["bounding_box"]["coordinates"][0][0][0]+tweet["place"]["bounding_box"]["coordinates"][0][2][0])/2, 
+            "latitude":(tweet["place"]["bounding_box"]["coordinates"][0][0][1]+tweet["place"]["bounding_box"]["coordinates"][0][1][1])/2,
+            "city":tweet["place"]["full_name"],
+            "country_code":tweet["place"]["country_code"],
+            "country":tweet["place"]["country"]
 
         }]
         solr = pysolr.Solr('http://192.168.36.131:8886/solr/geoBasedTweets')
