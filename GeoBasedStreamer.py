@@ -14,7 +14,7 @@ class GeoTweetListener(StreamListener):
     try:
       if tweet["place"]:
         producer.send_messages('geoBasedTweets', data.encode("utf-8"))
-        print(data)
+        #print(data)
     except KeyError as msg:
       print(msg)
 

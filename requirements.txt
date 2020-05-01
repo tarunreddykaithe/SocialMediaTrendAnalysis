@@ -3,6 +3,7 @@ pyspark
 tweepy==3.8.0
 kafka-python==2.0.1
 pysolr==3.8.1
+configparser
 
 
 #Reporting tool(>Python3.6)
