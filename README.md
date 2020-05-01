@@ -6,7 +6,7 @@ Kafka Producer - Python program that uses the "tweepy", "kafka-python" dependenc
 
 Spark Streaming - Python program that reads data from kafka using Spark Streaming and then uses "pysolr" dependency to writes the data   to solr document.
 
-Banana/Apache Superset- Load tweets from Solr and display different charts like Top Countries, Map-Based tweets.
+Banana- Load tweets from Solr and display different charts like Top Countries, Map-Based tweets.
 
 ## Architecture
 ![Architecture](Architecture.JPG)
@@ -18,7 +18,7 @@ Banana/Apache Superset- Load tweets from Solr and display different charts like 
 * Generate Twitter Access Token and add them in config.ini file
 * Install required libraries:
 ```bash
-$ pip install json pyspark tweepy==3.8.0 kafka-python==2.0.1 pysolr==3.8.1 superset==0.30.1 sqlalchemy==1.3.15 sqlalchemy-solr==0.1.dev0 sqlalchemy-utils==0.36.3 configparser
+$ pip install json pyspark tweepy==3.8.0 kafka-python==2.0.1 pysolr==3.8.1 configparser
 ```
 * Create a solr collection using configset "geobasedConfig" file in repository:
 ```bash
@@ -52,5 +52,5 @@ http://hostname:8886/solr/banana/src/index.html#/dashboard
 2. [Kafka-Python](https://kafka-python.readthedocs.io/en/master/index.html)
 3. [Spark Streaming](https://spark.apache.org/docs/latest/streaming-programming-guide.html)
 3. [SQLAlchemy SOLR](https://github.com/aadel/sqlalchemy-solr)
-4. [Apache Superset](https://superset.incubator.apache.org/index.html)
+4. [Banana](https://doc.lucidworks.com/lucidworks-hdpsearch/2.5/Guide-Banana.html)
 5. [Python](https://docs.python.org/3/library/index.html)
