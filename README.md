@@ -40,12 +40,12 @@ python GeoBasedStreamer.py
 ```bash
 PYSPARK_PYTHON=python3.6 spark-submit --master yarn --deploy-mode client --conf "spark.dynamicAllocation.enabled=false"  --jars spark-streaming-kafka-0-8-assembly_2.11-2.3.1.jar GeoBasedProcessor.py sandbox-hdp.hortonworks.com:2181 geoBasedTweets
 ```
-**Step 3:** Load the "Corona Tweets" file in Banana UI.
-Banana UI: #address
+**Step 3:** Load the "CoronaTweets_BananaUI" file in Banana UI and update collection name to "geoBasedTweets". Use the following URL to access the dashboard:
+http://hostname:8886/solr/banana/src/index.html#/dashboard
 
 
-## Screenshots/Dashboard
-
+## Dashboard
+![Demo](demo.gif)
 
 ## References
 1. [Tweepy(Twitter API)](http://docs.tweepy.org/en/latest/index.html)
