@@ -1,6 +1,6 @@
 # Real Time Twitter Analysis using Spark Streaming, Kafka
 ## Introduction
-This application collects Tweets that have hash tags #corona, #coronavirus, #covid19 and run analytics in real-time.
+Scalable and fault-tolerant data pipeline to collects Tweets that have hash tags #corona, #coronavirus, #covid19 and run analytics in real-time using Kafka, Spark Streaming and Apache Solr.
 
 Kafka Producer - Python program that uses the "tweepy", "kafka-python" dependency to stream current tweets that have given hash tags and store in kafka.
 
@@ -30,7 +30,7 @@ cd $SOLR_HOME/server/solr-webapp/webapp
 sudo git clone https://github.com/lucidworks/banana
 ```
 
-## Build, Deploy
+## Instructions
 
 **Step 1:** Run GeoBasedStreamer.py file to stream tweets from Twitter and store them into Kafka.
 ```bash
